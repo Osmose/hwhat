@@ -1,17 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
 
 import App from 'hwhat/containers/App';
+import DevTools from 'hwhat/containers/DevTools';
 import {rootReducer} from 'hwhat/reducers';
+import configureStore from 'hwhat/store';
+import {isReleaseBuild} from 'hwhat/utils';
 
 
 export function start() {
-    let store = createStore(rootReducer, {todos: {1: {summary: 'test'}, 2: {summary: 'test2'}}});
+    let store = configureStore({todos: {
+        1: {summary: 'test', complete: false},
+        2: {summary: 'test2', complete: true},
+    }});
+
     ReactDOM.render(
         <Provider store={store}>
-            <App />
+            <div>
+                <App />
+                {!isReleaseBuild() ? <DevTools /> : null}
+            </div>
         </Provider>,
         document.querySelector('#app')
     );

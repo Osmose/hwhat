@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {addTodo, removeTodo} from 'hwhat/actions/todos';
+import {addTodo, changeTodoComplete, deleteTodo} from 'hwhat/actions/todos';
 import AddTodo from 'hwhat/components/AddTodo';
 import TodoList from 'hwhat/components/TodoList';
 
@@ -12,18 +12,26 @@ class App extends Component {
 
         return (
             <div>
-                <AddTodo onSubmitTodo={::this.onSubmitTodo} />
-                <TodoList todos={todos} onClickTodoDelete={::this.onClickTodoDelete}/>
+                <AddTodo onAddTodo={::this.handleAddTodo} />
+                <TodoList
+                    todos={todos}
+                    onDeleteTodo={::this.handleDeleteTodo}
+                    onChangeTodoComplete={::this.handleChangeTodoComplete}
+                />
             </div>
         );
     }
 
-    onSubmitTodo(summary) {
+    handleAddTodo(summary) {
         this.props.dispatch(addTodo(summary));
     }
 
-    onClickTodoDelete(id) {
-        this.props.dispatch(removeTodo(id));
+    handleDeleteTodo(id) {
+        this.props.dispatch(deleteTodo(id));
+    }
+
+    handleChangeTodoComplete(id, complete) {
+        this.props.dispatch(changeTodoComplete(id, complete));
     }
 }
 

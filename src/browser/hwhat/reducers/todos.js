@@ -1,4 +1,4 @@
-import {ADD_TODO, REMOVE_TODO} from 'hwhat/actions/todos';
+import {ADD_TODO, CHANGE_TODO_COMPLETE, DELETE_TODO} from 'hwhat/actions/todos';
 
 
 function newID(state) {
@@ -7,16 +7,28 @@ function newID(state) {
 
 
 export default function todos(state={}, action) {
+    let newState = null;
+    let todo = null;
+
     switch (action.type) {
         case ADD_TODO:
-            state = {...state};
-            state[newID(state)] = {summary: action.summary};
-            return state;
+            newState = {...state};
+            newState[newID(newState)] = {summary: action.summary, complete: false};
+            return newState;
 
-        case REMOVE_TODO:
-            state = {...state};
-            delete state[action.id];
-            return state;
+        case DELETE_TODO:
+            newState = {...state};
+            delete newState[action.id];
+            return newState;
+
+        case CHANGE_TODO_COMPLETE:
+            newState = {...state};
+
+            todo = {...state[action.id]};
+            todo.complete = action.complete;
+            newState[action.id] = todo;
+
+            return newState;
 
         default:
             return state;

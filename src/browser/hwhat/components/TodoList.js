@@ -11,13 +11,17 @@ export default class TodoList extends Component {
     }*/
 
     render() {
-        let {todos, onClickTodoDelete} = this.props;
+        let {todos, onDeleteTodo, onChangeTodoComplete} = this.props;
 
         let listItems = [];
         for (let id in todos) {
             listItems.push(
-                <Todo key={id} id={id} {...todos[id]}
-                      onClickDelete={onClickTodoDelete}
+                <Todo
+                    key={id}
+                    id={id}
+                    {...todos[id]}
+                    onDelete={onDeleteTodo}
+                    onChangeComplete={onChangeTodoComplete}
                 />
             );
         }
