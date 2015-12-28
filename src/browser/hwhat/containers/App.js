@@ -1,39 +1,29 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-import {addTodo, changeTodoComplete, deleteTodo} from 'hwhat/actions/todos';
+import * as todoActions from 'hwhat/actions/todos';
 import AddTodo from 'hwhat/components/AddTodo';
 import TodoList from 'hwhat/components/TodoList';
 
 
-class App extends Component {
-    render() {
-        let {todos} = this.props;
+let App = ({todos, actions}) => (
+    <div>
+        <AddTodo actions={actions} />
+        <TodoList todos={todos} actions={actions} />
+    </div>
+);
 
-        return (
-            <div>
-                <AddTodo onAddTodo={::this.handleAddTodo} />
-                <TodoList
-                    todos={todos}
-                    onDeleteTodo={::this.handleDeleteTodo}
-                    onChangeTodoComplete={::this.handleChangeTodoComplete}
-                />
-            </div>
-        );
-    }
+// Convert immutable state to normal JS for React.
+function mapStateToProps(state) {
+    return state.toJS();
+}
 
-    handleAddTodo(summary) {
-        this.props.dispatch(addTodo(summary));
-    }
-
-    handleDeleteTodo(id) {
-        this.props.dispatch(deleteTodo(id));
-    }
-
-    handleChangeTodoComplete(id, complete) {
-        this.props.dispatch(changeTodoComplete(id, complete));
-    }
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(todoActions, dispatch),
+    };
 }
 
 
-export default connect((state) => state)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

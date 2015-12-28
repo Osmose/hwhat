@@ -18,7 +18,7 @@ export default class AddTodo extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        this.props.onAddTodo(this.refs.summary.value);
+        this.props.actions.addTodo(this.refs.summary.value);
         this.refs.summary.value = '';
     }
 };

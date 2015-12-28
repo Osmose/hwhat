@@ -1,36 +1,36 @@
-import {ADD_TODO, CHANGE_TODO_COMPLETE, DELETE_TODO} from 'hwhat/actions/todos';
+import Immutable from 'immutable';
+
+import * as actions from 'hwhat/actions/todos';
 
 
-function newID(state) {
-    return Math.max(...Object.keys(state)) + 1;
+function newID(todos) {
+    return Math.max(...todos.keys()) + 1;
 }
 
 
-export default function todos(state={}, action) {
-    let newState = null;
+export default function todoReducer(todos={}, action) {
     let todo = null;
 
     switch (action.type) {
-        case ADD_TODO:
-            newState = {...state};
-            newState[newID(newState)] = {summary: action.summary, complete: false};
-            return newState;
+        case actions.ADD_TODO:
+            todo = Immutable.Map({
+                summary: action.summary,
+                complete: false,
+            });
+            return todos.set(newID(todos), todo);
 
-        case DELETE_TODO:
-            newState = {...state};
-            delete newState[action.id];
-            return newState;
+        case actions.DELETE_TODO:
+            return todos.delete(action.id);
 
-        case CHANGE_TODO_COMPLETE:
-            newState = {...state};
+        case actions.CHANGE_TODO_COMPLETE:
+            todo = todos.get(action.id).set('complete', action.complete);
+            return todos.set(action.id, todo);
 
-            todo = {...state[action.id]};
-            todo.complete = action.complete;
-            newState[action.id] = todo;
-
-            return newState;
+        case actions.CHANGE_TODO_SUMMARY:
+            todo = todos.get(action.id).set('summary', action.summary);
+            return todos.set(action.id, todo);
 
         default:
-            return state;
+            return todos;
     }
 }

@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
@@ -9,12 +10,16 @@ import configureStore from 'hwhat/store';
 import {isReleaseBuild} from 'hwhat/utils';
 
 
+export let store = null;
+
+
 export function start() {
-    let store = configureStore({todos: {
+    let initialState = Immutable.fromJS({todos: {
         1: {summary: 'test', complete: false},
         2: {summary: 'test2', complete: true},
     }});
 
+    store = configureStore(initialState);
     ReactDOM.render(
         <Provider store={store}>
             <div>

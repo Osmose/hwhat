@@ -1,14 +1,18 @@
 import React, {Component, PropTypes} from 'react';
 
+import TodoSummaryEditor from 'hwhat/components/TodoSummaryEditor';
+
 
 export default class Todo extends Component {
-    /*static propTypes = {
-        summary: PropTypes.string.isRequired,
-        complete: PropTypes.boolean.isRequired,
-    };*/
+    constructor(props) {
+        super(props);
+        this.state = {
+            editing: false,
+        };
+    }
 
     render() {
-        let {summary, complete} = this.props;
+        let {id, summary, complete} = this.props;
 
         return (
             <li>
@@ -18,17 +22,42 @@ export default class Todo extends Component {
                     checked={complete}
                     onChange={::this.handleChangeComplete}
                 />
-                <span>{summary}</span>
-                <button onClick={::this.handleClickDelete}>Delete</button>
+                {this.renderSummary(id, summary)}
+                <button onClick={::this.handleClickDelete}>
+                    Delete
+                </button>
             </li>
         );
     }
 
+    renderSummary(id, summary) {
+        if (this.state.editing) {
+            return (
+                <TodoSummaryEditor summary={summary} onSave={::this.handleSave} />
+            );
+        } else {
+            return (
+                <span onDoubleClick={::this.handleDoubleClickSummary}>
+                    {summary}
+                </span>
+            );
+        }
+    }
+
+    handleDoubleClickSummary() {
+        this.setState({editing: true});
+    }
+
     handleClickDelete() {
-        this.props.onDelete(this.props.id);
+        this.props.actions.deleteTodo(this.props.id);
     }
 
     handleChangeComplete() {
-        this.props.onChangeComplete(this.props.id, this.refs.complete.checked);
+        this.props.actions.changeTodoComplete(this.props.id, this.refs.complete.checked);
+    }
+
+    handleSave(summary) {
+        this.props.actions.changeTodoSummary(this.props.id, summary);
+        this.setState({editing: false});
     }
 };
