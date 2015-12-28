@@ -4,15 +4,52 @@ import {bindActionCreators} from 'redux';
 
 import * as todoActions from 'hwhat/actions/todos';
 import AddTodo from 'hwhat/components/AddTodo';
+import TodoDetails from 'hwhat/components/TodoDetails';
 import TodoList from 'hwhat/components/TodoList';
 
 
-let App = ({todos, actions}) => (
-    <div>
-        <AddTodo actions={actions} />
-        <TodoList todos={todos} actions={actions} />
-    </div>
-);
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            editingId: null,
+        };
+    }
+
+    render() {
+        let {todos, actions} = this.props;
+
+        return (
+            <div>
+                <AddTodo actions={actions} />
+                <TodoList
+                    todos={todos}
+                    actions={actions}
+                    onSelectTodo={::this.handleSelectTodo}
+                />
+                {this.editingTodo
+                    ? <TodoDetails
+                        actions={actions}
+                        id={this.state.editingId}
+                        {...this.editingTodo}
+                      />
+                    : null}
+            </div>
+        );
+    }
+
+    get editingTodo() {
+        if (this.state.editingId) {
+            return this.props.todos[this.state.editingId];
+        } else {
+            return null;
+        }
+    }
+
+    handleSelectTodo(id) {
+        this.setState({editingId: id});
+    }
+}
 
 // Convert immutable state to normal JS for React.
 function mapStateToProps(state) {

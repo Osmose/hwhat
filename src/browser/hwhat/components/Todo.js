@@ -1,7 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 
-import TodoSummaryEditor from 'hwhat/components/TodoSummaryEditor';
-
 
 export default class Todo extends Component {
     constructor(props) {
@@ -15,14 +13,14 @@ export default class Todo extends Component {
         let {id, summary, complete} = this.props;
 
         return (
-            <li>
+            <li onClick={::this.handleClick}>
                 <input
                     type="checkbox"
                     ref="complete"
                     checked={complete}
                     onChange={::this.handleChangeComplete}
                 />
-                {this.renderSummary(id, summary)}
+                <span>{summary}</span>
                 <button onClick={::this.handleClickDelete}>
                     Delete
                 </button>
@@ -30,22 +28,8 @@ export default class Todo extends Component {
         );
     }
 
-    renderSummary(id, summary) {
-        if (this.state.editing) {
-            return (
-                <TodoSummaryEditor summary={summary} onSave={::this.handleSave} />
-            );
-        } else {
-            return (
-                <span onDoubleClick={::this.handleDoubleClickSummary}>
-                    {summary}
-                </span>
-            );
-        }
-    }
-
-    handleDoubleClickSummary() {
-        this.setState({editing: true});
+    handleClick() {
+        this.props.onSelect(this.props.id);
     }
 
     handleClickDelete() {
@@ -54,10 +38,5 @@ export default class Todo extends Component {
 
     handleChangeComplete() {
         this.props.actions.changeTodoComplete(this.props.id, this.refs.complete.checked);
-    }
-
-    handleSave(summary) {
-        this.props.actions.changeTodoSummary(this.props.id, summary);
-        this.setState({editing: false});
     }
 };
