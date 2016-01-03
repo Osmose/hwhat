@@ -27,6 +27,7 @@ export default class TodoSummary extends Component {
                            name="summary"
                            ref="summary"
                            defaultValue={summary}
+                           onFocus={::this.handleFocus}
                            onBlur={::this.handleSave}
                     />
                 </form>
@@ -48,9 +49,15 @@ export default class TodoSummary extends Component {
         this.setState({editing: true});
     }
 
+    handleFocus() {
+        this.props.onFocus();
+    }
+
     handleSave(event) {
         event.preventDefault();
         this.props.actions.changeTodoSummary(this.props.id, this.refs.summary.value);
         this.setState({editing: false});
+
+        this.props.onBlur();
     }
 };

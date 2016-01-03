@@ -31,6 +31,7 @@ class App extends Component {
                     ? <TodoDetails
                         actions={actions}
                         id={this.state.editingId}
+                        onClickOutside={::this.handleClickOutsideDetails}
                         {...this.editingTodo}
                       />
                     : null}
@@ -48,6 +49,10 @@ class App extends Component {
 
     handleSelectTodo(id) {
         this.setState({editingId: id});
+    }
+
+    handleClickOutsideDetails(event) {
+        this.setState({editingId: null});
     }
 }
 

@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 
 import * as actions from 'hwhat/actions/todos';
+import {Todo} from 'hwhat/models';
 
 
 function newID(todos) {
@@ -13,9 +14,8 @@ export default function todoReducer(todos={}, action) {
 
     switch (action.type) {
         case actions.ADD_TODO:
-            todo = Immutable.Map({
+            todo = new Todo({
                 summary: action.summary,
-                complete: false,
             });
             return todos.set(newID(todos), todo);
 
@@ -28,6 +28,10 @@ export default function todoReducer(todos={}, action) {
 
         case actions.CHANGE_TODO_SUMMARY:
             todo = todos.get(action.id).set('summary', action.summary);
+            return todos.set(action.id, todo);
+
+        case actions.CHANGE_TODO_NOTES:
+            todo = todos.get(action.id).set('notes', action.notes);
             return todos.set(action.id, todo);
 
         default:

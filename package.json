@@ -21,6 +21,7 @@
     "pixi.js": "pixijs/pixi.js#v3.0.8",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
+    "react-onclickoutside": "^4.5.0",
     "react-redux": "^4.0.1",
     "redux": "^3.0.5",
     "redux-immutablejs": "0.0.8"
